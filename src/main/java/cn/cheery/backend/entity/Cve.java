@@ -8,6 +8,7 @@ import org.springframework.data.neo4j.core.schema.Property;
 import org.springframework.data.neo4j.core.schema.Relationship;
 
 import java.time.ZonedDateTime;
+import java.util.List;
 
 @Data
 @Node("CVE")
@@ -51,8 +52,8 @@ public class Cve {
     private ZonedDateTime publishTime;
 
     @Relationship(type = "影响", direction = Relationship.Direction.OUTGOING)
-    private Software software;
+    private List<Software> softwareList;
 
     @Relationship(type = "可能影响", direction = Relationship.Direction.OUTGOING)
-    private SystemNode system;
+    private List<SystemNode> systemList;
 }

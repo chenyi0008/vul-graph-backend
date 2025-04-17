@@ -61,7 +61,7 @@ class BackendApplicationTests {
 
     @Test
     void neoTest(){
-        cveService.createCveSoftwareRelationship("CVE-2025-0055", UUID.fromString("f7625f20-3412-458c-b1fb-8d56fa4b548a"));
+//        cveService.createCveSoftwareRelationship("CVE-2025-0055", UUID.fromString("f7625f20-3412-458c-b1fb-8d56fa4b548a"));
     }
 
 }

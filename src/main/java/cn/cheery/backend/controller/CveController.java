@@ -54,15 +54,21 @@ public class CveController {
 
 
     @PostMapping("/bind-software")
-    public ApiResponse bindSoftware(@RequestParam String cveId, @RequestParam UUID softwareId) {
-        cveService.createCveSoftwareRelationship(cveId, softwareId);
-        return ApiResponse.success();
+    public ApiResponse bindSoftware(@RequestParam String cveId, @RequestParam(defaultValue = "") List<UUID> softwareId) {
+        Optional<Object> op = cveService.createCveSoftwareRelationship(cveId, softwareId);
+        if (op.isPresent()) {
+            return ApiResponse.success(op.get());
+        }
+        return ApiResponse.fail("插入失败");
     }
 
     @PostMapping("/bind-system")
-    public ApiResponse bingSystem(@RequestParam String cveId, @RequestParam UUID systemId) {
-        cveService.createCveSystemRelationship(cveId, systemId);
-        return ApiResponse.success();
+    public ApiResponse bingSystem(@RequestParam String cveId, @RequestParam(defaultValue = "") List<UUID> systemId) {
+        Optional<Cve> op = cveService.createCveSystemRelationship(cveId, systemId);
+        if(op.isPresent()){
+            return ApiResponse.success(op.get());
+        }
+        return ApiResponse.fail("插入失败");
     }
 
 

@@ -16,5 +16,10 @@ import java.util.Map;
 @Repository
 public interface CveRepository extends Neo4jRepository<Cve, String> {
 
+    @Query("MATCH (c:CVE)-[r:影响]->(s:Software) WHERE c.cveId = $cveId DELETE r")
+    void deleteSoftwareRelationshipsByCveId(String cveId);
+
+    @Query("MATCH (c:CVE)-[r:可能影响]->(s:System) WHERE c.cveId = $cveId DELETE r")
+    void deleteSystemRelationshipsByCveId(String cveId);
 
 }

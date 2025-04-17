@@ -10,10 +10,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.neo4j.core.Neo4jTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
 /**
  * @Description
@@ -56,30 +59,44 @@ public class CveService {
     }
 
     @Transactional
-    public void createCveSoftwareRelationship(String cveId, UUID softwareId) {
-        Optional<Cve> cve = cveRepository.findById(cveId);
-        Optional<Software> software = softwareRepository.findById(softwareId);
+    public Optional<Object> createCveSoftwareRelationship(String cveId, List<UUID> softwareIds) {
+        Optional<Cve> optionalCve = cveRepository.findById(cveId);
 
-        if (cve.isPresent() && software.isPresent()) {
-            Cve cve1 = cve.get();
-            Software software1 = software.get();
-            cve1.setSoftware(software1);
-            neo4jTemplate.save(cve1);
+        if (optionalCve.isPresent()) {
+            Cve cve = optionalCve.get();
+            List<Software> currentList =  new ArrayList<>();
+            for (UUID softwareId : softwareIds) {
+                softwareRepository.findById(softwareId).ifPresent(currentList::add);
+            }
+            cve.setSoftwareList(currentList);
+            cveRepository.deleteSoftwareRelationshipsByCveId(cveId);
+            Cve save = neo4jTemplate.save(cve);
+            return Optional.of(save);
         }
+        return Optional.empty();
     }
 
 
     @Transactional
-    public void createCveSystemRelationship(String cveId, UUID systemId) {
-        Optional<Cve> cve = cveRepository.findById(cveId);
-        Optional<SystemNode> systemNode = systemRepository.findById(systemId);
-
-        if (cve.isPresent() && systemNode.isPresent()) {
-            Cve cve1 = cve.get();
-            SystemNode systemNode1 = systemNode.get();
-            cve1.setSystem(systemNode1);
-            neo4jTemplate.save(cve1);
+    public Optional<Cve> createCveSystemRelationship(String cveId, List<UUID> systemIds) {
+        Optional<Cve> optionalCve = cveRepository.findById(cveId);
+        if (optionalCve.isEmpty()) {
+            return Optional.empty();
         }
+
+        List<SystemNode> systems = StreamSupport
+                .stream(systemRepository.findAllById(systemIds).spliterator(), false)
+                .collect(Collectors.toList());
+
+        Cve cve = optionalCve.get();
+        List<SystemNode> currentSystems = new ArrayList<>();
+        cve.setSystemList(currentSystems);
+        cveRepository.deleteSystemRelationshipsByCveId(cveId);
+        Cve saved = neo4jTemplate.save(cve);
+        return Optional.of(saved);
     }
+
+
+
 
 }
