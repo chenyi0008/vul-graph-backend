@@ -5,8 +5,8 @@ import lombok.Data;
 import org.springframework.data.neo4j.core.schema.Id;
 import org.springframework.data.neo4j.core.schema.Node;
 import org.springframework.data.neo4j.core.schema.Property;
+import org.springframework.data.neo4j.core.schema.Relationship;
 
-import java.time.LocalDateTime;
 import java.time.ZonedDateTime;
 
 @Data
@@ -49,4 +49,10 @@ public class Cve {
 
     @Property("发布时间")
     private ZonedDateTime publishTime;
+
+    @Relationship(type = "影响", direction = Relationship.Direction.OUTGOING)
+    private Software software;
+
+    @Relationship(type = "可能影响", direction = Relationship.Direction.OUTGOING)
+    private SystemNode system;
 }

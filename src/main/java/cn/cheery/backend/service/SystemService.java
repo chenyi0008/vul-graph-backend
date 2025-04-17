@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 /**
  * @Description
@@ -23,7 +24,7 @@ public class SystemService {
         return systemRepository.save(system);
     }
 
-    public Optional<SystemNode> getSystem(String systemId) {
+    public Optional<SystemNode> getSystem(UUID systemId) {
         return systemRepository.findById(systemId);
     }
 
@@ -31,7 +32,7 @@ public class SystemService {
         return systemRepository.save(system);
     }
 
-    public void deleteSystem(String systemId) {
+    public void deleteSystem(UUID systemId) {
         systemRepository.deleteById(systemId);
     }
 

@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 /**
  * @Description
@@ -23,7 +24,7 @@ public class SoftwareService {
         return softwareRepository.save(software);
     }
 
-    public Optional<Software> getSoftware(String softwareId) {
+    public Optional<Software> getSoftware(UUID softwareId) {
         return softwareRepository.findById(softwareId);
     }
 
@@ -31,7 +32,7 @@ public class SoftwareService {
         return softwareRepository.save(software);
     }
 
-    public void deleteSoftware(String softwareId) {
+    public void deleteSoftware(UUID softwareId) {
         softwareRepository.deleteById(softwareId);
     }
 

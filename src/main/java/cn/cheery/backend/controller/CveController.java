@@ -2,12 +2,14 @@ package cn.cheery.backend.controller;
 
 import cn.cheery.backend.common.response.ApiResponse;
 import cn.cheery.backend.entity.Cve;
+import cn.cheery.backend.entity.Software;
+import cn.cheery.backend.entity.SystemNode;
 import cn.cheery.backend.service.CveService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/cve")
@@ -49,4 +51,19 @@ public class CveController {
         cveService.deleteCve(id);
         return ApiResponse.success();
     }
+
+
+    @PostMapping("/bind-software")
+    public ApiResponse bindSoftware(@RequestParam String cveId, @RequestParam UUID softwareId) {
+        cveService.createCveSoftwareRelationship(cveId, softwareId);
+        return ApiResponse.success();
+    }
+
+    @PostMapping("/bind-system")
+    public ApiResponse bingSystem(@RequestParam String cveId, @RequestParam UUID systemId) {
+        cveService.createCveSystemRelationship(cveId, systemId);
+        return ApiResponse.success();
+    }
+
+
 }

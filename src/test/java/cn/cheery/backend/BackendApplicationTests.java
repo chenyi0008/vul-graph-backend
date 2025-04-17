@@ -11,6 +11,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import java.nio.file.Paths;
 import java.util.List;
+import java.util.UUID;
 
 @SpringBootTest
 class BackendApplicationTests {
@@ -57,12 +58,10 @@ class BackendApplicationTests {
     @Autowired
     CveService cveService;
 
+
     @Test
     void neoTest(){
-        List<Cve> cveList = cveService.getCveList();
-        for (Cve c : cveList) {
-            System.out.println(c.getCveId());
-        }
+        cveService.createCveSoftwareRelationship("CVE-2025-0055", UUID.fromString("f7625f20-3412-458c-b1fb-8d56fa4b548a"));
     }
 
 }

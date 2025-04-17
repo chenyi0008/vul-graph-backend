@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/software")
@@ -23,7 +24,7 @@ public class SoftwareController {
     }
 
     @GetMapping("/{id}")
-    public ApiResponse get(@PathVariable("id") String id) {
+    public ApiResponse get(@PathVariable("id") UUID id) {
         Optional<Software> software = softwareService.getSoftware(id);
         if (software.isPresent()) {
             return ApiResponse.success(software.get());
@@ -45,7 +46,7 @@ public class SoftwareController {
     }
 
     @DeleteMapping("/{id}")
-    public ApiResponse delete(@PathVariable("id") String id) {
+    public ApiResponse delete(@PathVariable("id") UUID id) {
         softwareService.deleteSoftware(id);
         return ApiResponse.success();
     }

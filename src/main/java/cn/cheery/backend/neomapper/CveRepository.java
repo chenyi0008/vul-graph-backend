@@ -2,7 +2,12 @@ package cn.cheery.backend.neomapper;
 
 import cn.cheery.backend.entity.Cve;
 import org.springframework.data.neo4j.repository.Neo4jRepository;
+import org.springframework.data.neo4j.repository.query.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
+
+import java.util.List;
+import java.util.Map;
 
 /**
  * @Description
@@ -10,4 +15,6 @@ import org.springframework.stereotype.Repository;
  */
 @Repository
 public interface CveRepository extends Neo4jRepository<Cve, String> {
+
+
 }
