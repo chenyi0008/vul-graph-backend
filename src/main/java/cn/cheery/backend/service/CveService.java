@@ -63,6 +63,10 @@ public class CveService {
         return cveRepository.findAll();
     }
 
+    public List<Cve> getCveListBetween(double min, double max, String type){
+        return cveRepository.findByCvssScoreBetween(min, max, type);
+    }
+
     @Transactional
     public Optional<Object> createCveSoftwareRelationship(String cveId, List<UUID> softwareIds) {
         Optional<Cve> optionalCve = cveRepository.findById(cveId);
@@ -105,7 +109,7 @@ public class CveService {
         if (optionalCve.isPresent() && optionalCountry.isPresent()) {
             Cve cve = optionalCve.get();
             cve.setCountry(optionalCountry.get());
-            cveRepository.deleteSystemRelationshipsByCveId(cveId);
+            cveRepository.deleteCountryRelationById(cveId);
             Cve save = cveRepository.save(cve);
             return Optional.of(save);
         }

@@ -1,6 +1,7 @@
 package cn.cheery.backend.common.filter;
 
 import cn.cheery.backend.common.jwt.JwtUtil;
+import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -37,18 +38,24 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         String token = request.getHeader("Authorization");
         if (token != null && token.startsWith("Bearer ")) {
             token = token.substring(7);
-            JwtUtil.TokenInfo tokenInfo = jwtUtil.parseTokenToInfo(token);
-
-
-            if (tokenInfo !=null && tokenInfo.getUsername() != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-                String username = tokenInfo.getUsername();
-                UserDetails userDetails = userDetailsService.loadUserByUsername(username);
-                if (jwtUtil.validateToken(token)) {
-                    UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
-                            userDetails, null, userDetails.getAuthorities());
-                    authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-                    SecurityContextHolder.getContext().setAuthentication(authToken);
+            try{
+                JwtUtil.TokenInfo tokenInfo = jwtUtil.parseTokenToInfo(token);
+                if (tokenInfo !=null && tokenInfo.getUsername() != null && SecurityContextHolder.getContext().getAuthentication() == null) {
+                    String username = tokenInfo.getUsername();
+                    UserDetails userDetails = userDetailsService.loadUserByUsername(username);
+                    if (jwtUtil.validateToken(token)) {
+                        UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
+                                userDetails, null, userDetails.getAuthorities());
+                        authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+                        SecurityContextHolder.getContext().setAuthentication(authToken);
+                    }
                 }
+
+            }catch (ExpiredJwtException e){
+                response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                response.setContentType("application/json;charset=UTF-8");
+                response.getWriter().write("{\"code\":401,\"msg\":\"token过期\"}");
+                return;
             }
         }
 

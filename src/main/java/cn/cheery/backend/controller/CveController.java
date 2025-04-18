@@ -2,14 +2,11 @@ package cn.cheery.backend.controller;
 
 import cn.cheery.backend.common.response.ApiResponse;
 import cn.cheery.backend.entity.Cve;
-import cn.cheery.backend.entity.Software;
-import cn.cheery.backend.entity.SystemNode;
 import cn.cheery.backend.service.CveService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/cve")
@@ -35,8 +32,10 @@ public class CveController {
     }
 
     @GetMapping()
-    public ApiResponse getList() {
-        List<Cve> cveList = cveService.getCveList();
+    public ApiResponse getList(@RequestParam(value = "min", defaultValue = "0.0") Double min,
+                               @RequestParam(value = "max", defaultValue = "99.9") Double max,
+                               @RequestParam(value = "type", required = false, defaultValue = "") String type) {
+        List<Cve> cveList = cveService.getCveListBetween(min, max, type);
         return ApiResponse.success(cveList);
     }
 
