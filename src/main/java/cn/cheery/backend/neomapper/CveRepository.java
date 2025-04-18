@@ -6,9 +6,6 @@ import org.springframework.data.neo4j.repository.query.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
-import java.util.List;
-import java.util.Map;
-
 /**
  * @Description
  * @Date 2025/4/16
@@ -21,5 +18,8 @@ public interface CveRepository extends Neo4jRepository<Cve, String> {
 
     @Query("MATCH (c:CVE)-[r:可能影响]->(s:System) WHERE c.cveId = $cveId DELETE r")
     void deleteSystemRelationshipsByCveId(String cveId);
+
+    @Query(" MATCH (c:Country)-[r:报告]->(cve:CVE) WHERE id(cve) = $cveId DELETE r")
+    void deleteCountryRelationById(@Param("cveId") Long cveId);
 
 }

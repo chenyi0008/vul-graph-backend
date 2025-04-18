@@ -56,4 +56,8 @@ public class Cve {
 
     @Relationship(type = "可能影响", direction = Relationship.Direction.OUTGOING)
     private List<SystemNode> systemList;
+
+    @Relationship(type = "报告", direction = Relationship.Direction.INCOMING)
+    private Country country;
+
 }

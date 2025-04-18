@@ -1,8 +1,10 @@
 package cn.cheery.backend.service;
 
+import cn.cheery.backend.entity.Country;
 import cn.cheery.backend.entity.Cve;
 import cn.cheery.backend.entity.Software;
 import cn.cheery.backend.entity.SystemNode;
+import cn.cheery.backend.neomapper.CountryRepository;
 import cn.cheery.backend.neomapper.CveRepository;
 import cn.cheery.backend.neomapper.SoftwareRepository;
 import cn.cheery.backend.neomapper.SystemRepository;
@@ -37,6 +39,9 @@ public class CveService {
 
     @Autowired
     private SystemRepository systemRepository;
+
+    @Autowired
+    private CountryRepository countryRepository;
 
     public Cve createCve(Cve cve) {
         return cveRepository.save(cve);
@@ -80,23 +85,30 @@ public class CveService {
     @Transactional
     public Optional<Cve> createCveSystemRelationship(String cveId, List<UUID> systemIds) {
         Optional<Cve> optionalCve = cveRepository.findById(cveId);
-        if (optionalCve.isEmpty()) {
-            return Optional.empty();
-        }
 
         List<SystemNode> systems = StreamSupport
                 .stream(systemRepository.findAllById(systemIds).spliterator(), false)
                 .collect(Collectors.toList());
 
         Cve cve = optionalCve.get();
-        List<SystemNode> currentSystems = new ArrayList<>();
-        cve.setSystemList(currentSystems);
+        cve.setSystemList(systems);
         cveRepository.deleteSystemRelationshipsByCveId(cveId);
         Cve saved = neo4jTemplate.save(cve);
         return Optional.of(saved);
     }
 
+    @Transactional
+    public Optional<Cve> createCveCountryRelationship(String cveId, String countryId) {
+        Optional<Cve> optionalCve = cveRepository.findById(cveId);
+        Optional<Country> optionalCountry = countryRepository.findById(countryId);
 
-
-
+        if (optionalCve.isPresent() && optionalCountry.isPresent()) {
+            Cve cve = optionalCve.get();
+            cve.setCountry(optionalCountry.get());
+            cveRepository.deleteSystemRelationshipsByCveId(cveId);
+            Cve save = cveRepository.save(cve);
+            return Optional.of(save);
+        }
+        return Optional.empty();
+    }
 }

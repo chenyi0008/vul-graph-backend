@@ -10,11 +10,11 @@ import org.springframework.data.neo4j.core.schema.Property;
 public class Country {
 
     @Id
-    private String id;
+    @Property("英文名")
+    private String nameEn;
 
     @Property("中文名")
     private String nameZh;
 
-    @Property("英文名")
-    private String nameEn;
+
 }

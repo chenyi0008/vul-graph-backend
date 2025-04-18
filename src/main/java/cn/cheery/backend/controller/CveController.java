@@ -71,5 +71,14 @@ public class CveController {
         return ApiResponse.fail("插入失败");
     }
 
+    @PostMapping("/bind-country")
+    public ApiResponse bingCountry(@RequestParam String cveId, @RequestParam String countryId) {
+        Optional<Cve> op = cveService.createCveCountryRelationship(cveId, countryId);
+        if(op.isPresent()){
+            return ApiResponse.success(op.get());
+        }
+        return ApiResponse.fail("插入失败");
+    }
+
 
 }
