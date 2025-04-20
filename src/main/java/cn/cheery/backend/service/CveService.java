@@ -63,8 +63,8 @@ public class CveService {
         return cveRepository.findAll();
     }
 
-    public List<Cve> getCveListBetween(double min, double max, String type){
-        return cveRepository.findByCvssScoreBetween(min, max, type);
+    public List<Cve> getCveListBetween(double min, double max, String type, String id){
+        return cveRepository.findByCvssScoreBetween(min, max, type, id);
     }
 
     @Transactional

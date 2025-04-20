@@ -24,8 +24,6 @@ public interface CveRepository extends Neo4jRepository<Cve, String> {
     @Query("MATCH (c:Country)-[r:报告]->(cve:CVE) WHERE cve.cveId = $cveId  DELETE r")
     void deleteCountryRelationById(String cveId);
 
-    @Query("MATCH (c:CVE) WHERE c.`CVSS评分` >= $min AND c.`CVSS评分` <= $max AND c.`漏洞类型` CONTAINS $type RETURN c")
-    List<Cve> findByCvssScoreBetween(@Param("min") double min, @Param("max") double max, String type);
-
-
+    @Query("MATCH (c:CVE) WHERE c.`CVSS评分` >= $min AND c.`CVSS评分` <= $max AND c.`漏洞类型` CONTAINS $type AND c.cveId CONTAINS $id RETURN c")
+    List<Cve> findByCvssScoreBetween(@Param("min") double min, @Param("max") double max, String type, String id);
 }
