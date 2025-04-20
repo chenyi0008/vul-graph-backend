@@ -2,6 +2,7 @@ package cn.cheery.backend.controller;
 
 import cn.cheery.backend.common.jwt.JwtUtil;
 import cn.cheery.backend.common.response.ApiResponse;
+import cn.cheery.backend.entity.dto.LoginDto;
 import cn.cheery.backend.entity.dto.UserInfoDto;
 import cn.cheery.backend.entity.dto.UserRequest;
 import cn.cheery.backend.service.IUserService;
@@ -58,7 +59,10 @@ public class UserController {
                     .map(GrantedAuthority::getAuthority)
                     .orElse("user");  // 默认角色
 
-            return ApiResponse.success("登录成功", jwtUtil.generateToken(authentication.getName(), role));
+            LoginDto dto = new LoginDto();
+            dto.setRole(role);
+            dto.setToken(jwtUtil.generateToken(authentication.getName(), role));
+            return ApiResponse.success("登录成功", dto);
         } catch (BadCredentialsException e) {
             return ApiResponse.fail("用户名或密码错误");
         }
