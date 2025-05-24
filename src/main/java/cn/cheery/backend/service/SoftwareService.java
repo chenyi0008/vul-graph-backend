@@ -39,4 +39,8 @@ public class SoftwareService {
     public List<Software> getSoftwareList(){
         return softwareRepository.findAll();
     }
+
+    public List<Software> getSoftwareByName(String name){
+        return softwareRepository.findByName(name);
+    }
 }

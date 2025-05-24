@@ -62,6 +62,9 @@ public class Cve {
     @Relationship(type = "报告", direction = Relationship.Direction.INCOMING)
     private Country country;
 
+    @Relationship(type = "报告于", direction = Relationship.Direction.INCOMING)
+    private Year year;
+
     public void generateCveInfo(){
         Cve cve = this;
 
@@ -78,6 +81,7 @@ public class Cve {
         cve.setImpact("C:L/I:L/A:N");  // 影响
         cve.setSolution("Apply the latest patch available from the vendor.");  // 修复方案
         cve.setPublishTime(ZonedDateTime.parse("2025-02-15T09:30:00Z"));  // 发布时间
+        cve.setYear(new Year("2025"));
 
         // 填充影响的软件列表
         Software software1 = new Software();

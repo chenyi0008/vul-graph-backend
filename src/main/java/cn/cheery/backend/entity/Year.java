@@ -12,4 +12,11 @@ public class Year {
     @Id
     @Property("名称")
     private String yearName;
+
+    public Year(String yearName) {
+        this.yearName = yearName;
+    }
+
+    public Year() {
+    }
 }
